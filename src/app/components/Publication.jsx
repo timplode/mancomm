@@ -5,19 +5,32 @@ import {
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import {useParams} from "react-router";
-
+const api_host = process.env.REACT_APP_API_HOST;
 function Publication() {
     const { id } = useParams();
     const [publication, setPublication] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetch("http://localhost:3001/document/" + id)
-            .then(res => res.json())
-            .then(pub => setPublication(pub))
+        fetch(api_host + "/document/" + id)
+            .then(res => res.status === 200
+                    ? res.json()
+                    : null)
+            .then(res => setPublication(res))
+            .then(() => setLoading(false))
+            .catch((e) => {
+                setLoading(false)
+                console.log(e.message)
+            })
     }, [])
 
-    if (publication === null) {
+
+    if (loading) {
         return <div>Loading Publication</div>
+    }
+
+    if (publication === null) {
+        return <div>Publication Not Found</div>
     }
 
     return (

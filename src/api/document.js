@@ -2,7 +2,7 @@
 // This handler processes API Gateway requests and returns responses
 
 import {BadRequest, buildResponse, InternalServerError, NotFoundError} from "./api.js";
-import MongoDBWrapper from "../lib/mongoDBWrapper.js";
+import MongoDBWrapper from "./lib/mongoDBWrapper.js";
 
 /**
  * Lambda function handler for API Gateway requests

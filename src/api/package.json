@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "dependencies": {
+    "mongodb": "^6.15.0"
+  },
+  "scripts": {
+    "api:start": "serverless offline start --reloadHandler --disableCookieValidation",
+    "serverless:deploy": "sls deploy -s prod",
+    "search:deploy": "sls deploy -s prod function -f search",
+    "document:deploy": "sls deploy -s prod function -f document",
+    "standard:deploy": "sls deploy -s prod function -f standard"
+  }
+}

@@ -8,7 +8,7 @@ import {
     Pagination,
     TextField,
     InputAdornment,
-    Divider
+    Divider, Button
 } from '@mui/material';
 import { Search} from 'lucide-react';
 
@@ -145,6 +145,7 @@ export default function SearchResults(props) {
                 <Typography variant="body1" className="text-gray-700 mt-2">
                   {result.content.substr(0, 200)}
                 </Typography>
+                  <Button href={"/publication/"+result.id}>Full Document</Button>
               </CardContent>
             </Card>
                     ))}

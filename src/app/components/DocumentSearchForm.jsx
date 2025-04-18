@@ -14,6 +14,8 @@ import {
 } from '@mui/material';
 import SearchResults from "./SearchResults.jsx";
 
+const api_host = process.env.REACT_APP_API_HOST;
+
 const DocumentSearchForm = () => {
     // Form state
     const [fromYear, setFromYear] = useState('');
@@ -35,7 +37,7 @@ const DocumentSearchForm = () => {
         const fetchStandards = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:3001/standard');
+                const response = await fetch(api_host + '/standard');
 
                 if (!response.ok) {
                     throw new Error(`Server responded with ${response.status}`);
@@ -122,7 +124,7 @@ const DocumentSearchForm = () => {
         }
 
         // Make API call
-        const url = `http://localhost:3001/search?${params.toString()}`;
+        const url = api_host + `/search?${params.toString()}`;
 
         console.log('Sending request to:', url);
 

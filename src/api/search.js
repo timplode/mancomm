@@ -2,7 +2,7 @@
 // This handler processes API Gateway requests and returns responses
 
 import {buildResponse} from "./api.js";
-import MongoDBWrapper from "../lib/mongoDBWrapper.js";
+import MongoDBWrapper from "./lib/mongoDBWrapper.js";
 
 /**
  * Lambda function handler for API Gateway requests
@@ -35,7 +35,8 @@ export const handler = async (event, context) => {
             publicationDate: doc.publicationDate,
             standardNumber: doc.standardNumber,
             content: doc.content,
-            url: doc.url
+            url: doc.url,
+            id: doc._id
         }))
 
         // Return successful response
