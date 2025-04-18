@@ -2,6 +2,7 @@
 // This handler processes API Gateway requests and returns responses
 
 import {buildResponse} from "./api.js";
+import MongoDBWrapper from "../lib/mongoDBWrapper.js";
 
 /**
  * Lambda function handler for API Gateway requests
@@ -11,12 +12,31 @@ import {buildResponse} from "./api.js";
  */
 export const handler = async (event, context) => {
     // Log the incoming event for debugging purposes
-    console.log('Event:', JSON.stringify(event, null, 2));
-    console.log('Context:', JSON.stringify(context, null, 2));
 
     try {
         // Parse request details
-        const queryParams = event.queryStringParameters || {};
+        const {fromYear, toYear, standardNumber} = event.queryStringParameters || {};
+        const query = {}
+        if (fromYear !== undefined && toYear !== undefined) {
+            query.publicationDate = {
+                '$gte': fromYear + "-01-01",
+                '$lte': toYear + "-12-31"
+            }
+        }
+        if (standardNumber !== undefined) {
+            query.standardNumber = {'$regex': new RegExp(`^${standardNumber}`)}
+        }
+
+        const mongo = new MongoDBWrapper()
+        const matches = await mongo.query("publications", query)
+
+        const response = matches.map(doc => ({
+            title: doc.title,
+            publicationDate: doc.publicationDate,
+            standardNumber: doc.standardNumber,
+            content: doc.content,
+            url: doc.url
+        }))
 
         // Return successful response
         return buildResponse(200, response);

@@ -1,14 +1,42 @@
 {
   "type": "module",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
     "crawlee": "^3.13.2",
+    "lucide-react": "^0.501.0",
     "mongodb": "^6.15.0",
-    "serverless-offline": "^14.4.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.1",
+    "react-scripts": "5.0.1",
+    "serverless-offline": "^14.4.0",
+    "util": "^0.12.5",
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.99.6"
   },
   "scripts": {
+    "app:start": "react-scripts start",
+    "app:build": "react-scripts build",
+    "app:test": "react-scripts test",
+    "app:eject": "react-scripts eject",
     "api:start": "serverless offline start --reloadHandler --disableCookieValidation",
     "scraper:exec": "MONGO_PASS=${MONGO_PASS} MONGO_USER=root MONGO_ENDPOINT=localhost node src/scrape.js",
     "scraper:deploy": "sls deploy -s prod",
     "scraper:deploy:quick": "sls deploy -s prod function -f scrape-Osha"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

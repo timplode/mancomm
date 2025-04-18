@@ -5,9 +5,16 @@ import { MongoClient, ObjectId } from 'mongodb';
  * MongoDB wrapper for database operations
  */
 class MongoDBWrapper {
-    constructor(uri, dbName) {
-        this.uri = uri;
-        this.dbName = dbName;
+    constructor(dbName) {
+
+        const MONGO_HOST = process.env['MONGO_HOST']
+        const MONGO_USER = process.env['MONGO_USER']
+        const MONGO_PASS = encodeURIComponent(process.env['MONGO_PASS'])
+        const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}:27017`
+
+        this.uri = MONGO_URI;
+        this.dbName = process.env['MONGO_DB'];
+        console.log(MONGO_URI,this.dbName )
         this.client = null;
         this.db = null;
     }
@@ -21,7 +28,6 @@ class MongoDBWrapper {
                 this.client = new MongoClient(this.uri);
                 await this.client.connect();
                 this.db = this.client.db(this.dbName);
-                console.log('Successfully connected to MongoDB');
             } catch (error) {
                 console.error('Failed to connect to MongoDB:', error);
                 throw error;
@@ -66,6 +72,31 @@ class MongoDBWrapper {
             return document;
         } catch (error) {
             console.error(`Error fetching document with ID ${id}:`, error);
+            throw error;
+        }
+    }
+
+     async getDistictValues(collectionName, fieldName){
+        try {
+            await this.connect();
+            const collection = this.db.collection(collectionName);
+            const values = await collection.distinct(fieldName)
+            return values;
+        } catch (error) {
+            console.error(`Error fetching distinct values with ID collectionName, fieldName:`, collectionName, fieldName, error);
+            throw error;
+        }
+    }
+
+    async query(collectionName, query) {
+        try {
+            await this.connect();
+            const collection = this.db.collection(collectionName);
+            const values = await collection.find(query).toArray();
+
+            return values;
+        } catch (error) {
+            console.error(`Error on query`, query, error);
             throw error;
         }
     }

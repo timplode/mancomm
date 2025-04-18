@@ -47,6 +47,21 @@ functions:
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
+  standard:
+    handler: src/api/standard.handler
+    events:
+      - httpApi:
+          path: /standard
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
   scrape-Osha:
     handler: src/scrape.runCrawler
     description: 'Scrape Osha Standard Intepretations'
