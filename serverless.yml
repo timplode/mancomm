@@ -1,0 +1,93 @@
+service: mancomm
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'local'}
+  timeout: 57600
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    MONGO_PASS: ${self:custom.MONGO_PASS.${self:provider.stage}}
+    MONGO_USER: ${self:custom.MONGO_USER.${self:provider.stage}}
+    MONGO_HOST: ${self:custom.MONGO_HOST.${self:provider.stage}}
+    MONGO_DB: ${self:custom.MONGO_DB.${self:provider.stage}}
+
+
+functions:
+  search:
+    handler: src/api/search.handler
+    events:
+      - httpApi:
+          path: /search
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+  document:
+    handler: src/api/document.handler
+    events:
+      - httpApi:
+          path: /document/{id}
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+  scrape-Osha:
+    handler: src/scrape.runCrawler
+    description: 'Scrape Osha Standard Intepretations'
+    events:
+      - schedule:
+          rate: cron(0 12 * * ? *) # Runs at 12:00 PM UTC every day
+          enabled: true
+          description: 'Triggers the function every day at noon UTC'
+
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+  stages:
+    - local
+    - dev
+    - prod
+  MONGO_HOST:
+    local: localhost
+    dev: tbd
+    prod: tbd
+  MONGO_USER:
+    local: root
+    dev: backend
+    prod: backend
+  MONGO_PASS:
+    local: root
+    dev: ${env:DBPASS}
+    prod: ${env:DBPASS}
+  MONGO_DB:
+    local: osha_data
+    dev: osha_data
+    prod: osha_data
+package:
+  exclude:
+    - .git/**
+    - .gitignore
+    - README.md
+    - package-lock.json
+    - tests/**
+    - .idea

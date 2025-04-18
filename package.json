@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "dependencies": {
+    "crawlee": "^3.13.2",
+    "mongodb": "^6.15.0",
+    "serverless-offline": "^14.4.0"
+  },
+  "scripts": {
+    "api:start": "serverless offline start --reloadHandler --disableCookieValidation",
+    "scraper:exec": "MONGO_PASS=${MONGO_PASS} MONGO_USER=root MONGO_ENDPOINT=localhost node src/scrape.js",
+    "scraper:deploy": "sls deploy -s prod",
+    "scraper:deploy:quick": "sls deploy -s prod function -f scrape-Osha"
+  }
+}
