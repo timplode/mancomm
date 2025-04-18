@@ -11,7 +11,7 @@ import DateSearch from './components/DateSearch.jsx';
 import StandardSearch from './components/StandardSearch.jsx';
 import OshActSearch from './components/OshActSearch.jsx';
 import PublicationList from './components/PublicationList.jsx';
-import PublicationDetail from './components/PublicationDetail.jsx';
+import PublicationDetail from './components/Publication.jsx';
 
 
 // Create theme
