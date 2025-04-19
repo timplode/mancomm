@@ -37,7 +37,7 @@ const DocumentSearchForm = () => {
         const fetchStandards = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:3001/standard');
+                const response = await fetch('https://fwinoof5ne.execute-api.us-east-1.amazonaws.com/standard');
 
                 if (!response.ok) {
                     throw new Error(`Server responded with ${response.status}`);
@@ -123,7 +123,7 @@ const DocumentSearchForm = () => {
         }
 
         // Make API call
-        const url = `http://localhost:3001/search?${params.toString()}`;
+        const url = `https://fwinoof5ne.execute-api.us-east-1.amazonaws.com/search?${params.toString()}`;
 
         console.log('Sending request to:', url);
 

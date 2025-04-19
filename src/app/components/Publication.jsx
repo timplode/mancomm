@@ -12,7 +12,7 @@ function Publication() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetch("http://localhost:3001/document/" + id)
+        fetch("https://fwinoof5ne.execute-api.us-east-1.amazonaws.com/document/" + id)
             .then(res => res.status === 200
                     ? res.json()
                     : null)

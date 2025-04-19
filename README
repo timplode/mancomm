@@ -1,13 +1,26 @@
-Frontend
- - Run local `npm run app:start`
- No deployment script yet
+### Frontend
+[Running App](https://dvi7tt7d6ntg2.cloudfront.net/) hosted on AWS / Cloudfront
 
-API is in src/api
-- run local `npm run api:start`
-- deploy serverless infra `npm run serverless:deploy`
-- update search function `npm run search:deploy`
-- update document function `npm run document:deploy`
-- update standard function `npm run standard:deploy`
-|
+### local development
+ - `npm i` to install packages
+ - `npm run start` start frontend dev server
+ - `npm run build` build for prod
+ - `npm run deploy` to send built front end to temporary, hard-coded s3 bucket
 
-Scraper in src/scrape.js
+
+### backend
+All backend code is in src/api
+- add `export MONGO_PASS` to .bashrc / .zshrc
+- `npm i` to install packages
+- `npm run start` run local API
+- `npm run serverless:deploy` deploy serverless infra
+- `npm run search:deploy` update search function
+- `npm run document:deploy` update document function
+- `npm run standard:deploy` update standard function
+- `npm run scrape:publication` crawls all publications
+- `npm run scrape:standard` scrapes all standards for their titles
+
+
+### AWS
+functions are setup via `src/api/serverless.yml`
+These functions are running in VPC's though I set them up manually instead of serverless.yml
