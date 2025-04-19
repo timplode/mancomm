@@ -1,0 +1,13 @@
+Frontend
+ - Run local `npm run app:start`
+ No deployment script yet
+
+API is in src/api
+- run local `npm run api:start`
+- deploy serverless infra `npm run serverless:deploy`
+- update search function `npm run search:deploy`
+- update document function `npm run document:deploy`
+- update standard function `npm run standard:deploy`
+|
+
+Scraper in src/scrape.js
