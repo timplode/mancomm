@@ -5,7 +5,7 @@ import { MongoClient, ObjectId } from 'mongodb';
  * MongoDB wrapper for database operations
  */
 class MongoDBWrapper {
-    constructor(dbName) {
+    constructor() {
 
         const MONGO_HOST = process.env['MONGO_HOST']
         const MONGO_USER = process.env['MONGO_USER']
@@ -98,6 +98,33 @@ class MongoDBWrapper {
         } catch (error) {
             console.error(`Error on query`, query, error);
             throw error;
+        }
+    }
+
+    // Function to save data to MongoDB with bulk upsert logic
+    async bulkUpsert(collectionName, data) {
+        try {
+            await this.connect();
+            const collection = this.db.collection(collectionName);
+
+            // Create a bulk operation
+            const bulkOps = data.map(standard => ({
+                updateOne: {
+                    filter: { standardNumber: standard.standardNumber },
+                    update: { $set: standard },
+                    upsert: true
+                }
+            }));
+
+            // Execute the bulk operation
+            if (bulkOps.length > 0) {
+                const result = await collection.bulkWrite(bulkOps);
+                console.log(`MongoDB bulk operation complete: ${result.upsertedCount} inserted, ${result.modifiedCount} updated`);
+            } else {
+                console.log('No data to save to MongoDB');
+            }
+        } catch (err) {
+            console.error('Error saving to MongoDB:', err);
         }
     }
 }

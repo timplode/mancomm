@@ -12,7 +12,7 @@ function Publication() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetch(api_host + "/document/" + id)
+        fetch("http://localhost:3001/document/" + id)
             .then(res => res.status === 200
                     ? res.json()
                     : null)

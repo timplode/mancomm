@@ -9,5 +9,8 @@
     "search:deploy": "sls deploy -s prod function -f search",
     "document:deploy": "sls deploy -s prod function -f document",
     "standard:deploy": "sls deploy -s prod function -f standard"
+  },
+  "devDependencies": {
+    "serverless-offline": "^13.0.0"
   }
 }

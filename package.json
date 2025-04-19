@@ -20,7 +20,10 @@
     "app:start": "react-scripts start",
     "app:build": "react-scripts build",
     "app:test": "react-scripts test",
-    "app:eject": "react-scripts eject"
+    "app:eject": "react-scripts eject",
+    "scrape:publication": "MONGO_HOST=localhost MONGO_USER=root MONGO_PASS=root MONGO_DB=osha_data node src/crawler/scrape.js",
+    "scrape:standard": "MONGO_HOST=localhost MONGO_USER=root MONGO_PASS=root MONGO_DB=osha_data node src/crawler/scrape-standards.js"
+
 
   },
   "browserslist": {

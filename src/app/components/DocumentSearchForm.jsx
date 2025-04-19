@@ -37,7 +37,7 @@ const DocumentSearchForm = () => {
         const fetchStandards = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(api_host + '/standard');
+                const response = await fetch('http://localhost:3001/standard');
 
                 if (!response.ok) {
                     throw new Error(`Server responded with ${response.status}`);
@@ -49,7 +49,6 @@ const DocumentSearchForm = () => {
             } catch (err) {
                 console.error('Error fetching standard options:', err);
                 setError('Failed to load standard options. Please try again later.');
-                setStandardOptions(["value1", "value2", "value3"]); // Fallback values
             } finally {
                 setLoading(false);
             }
@@ -124,7 +123,7 @@ const DocumentSearchForm = () => {
         }
 
         // Make API call
-        const url = api_host + `/search?${params.toString()}`;
+        const url = `http://localhost:3001/search?${params.toString()}`;
 
         console.log('Sending request to:', url);
 

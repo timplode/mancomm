@@ -14,14 +14,15 @@ import MongoDBWrapper from "./lib/mongoDBWrapper.js";
     try {
 
         const mongo = new MongoDBWrapper()
-        let standardList = await mongo.getDistictValues("publications", "standardNumber")
+        let standardList = await mongo.query("standard")
 
         standardList = standardList.reduce((acc,e) => {
             //mongo counts undefined as a value apparently
             if (e === undefined) {
                 return acc
             }
-            acc.push({label: e, id: e})
+            acc.push({label: e.standardNumber + " " + e.standardTitle, id: e.standardNumber})
+            e.children.map(c => acc.push({label: c.standardNumber + " " + c.standardTitle, id: c.standardNumber}))
             return acc
         }, [])
 
