@@ -1,6 +1,6 @@
 // Import required libraries
 import { CheerioCrawler, RequestQueue } from 'crawlee';
-import MongoDBWrapper from "../api/lib/mongoDBWrapper.js";
+import MongoDBWrapper from "../lib/mongoDBWrapper.js";
 
 const COLLECTION_NAME = 'standard';
 

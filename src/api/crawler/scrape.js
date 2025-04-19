@@ -1,62 +1,20 @@
-// OSHA Publications Crawler using Crawlee with Cheerio
-// This script scrapes publications from OSHA's Standard Interpretations page
-// and saves them to MongoDB after every 100 records
+
 
 import { CheerioCrawler, Dataset } from 'crawlee';
 import { setTimeout } from 'timers/promises';
-import { MongoClient } from 'mongodb';
+import MongoDBWrapper from "../lib/mongoDBWrapper.js";
 
 // Define the base URL
 const BASE_URL = 'https://www.osha.gov/laws-regs/standardinterpretations/publicationdate';
-
-// MongoDB connection string - replace with your own connection details
-const MONGO_ENDPOINT = process.env['MONGO_ENDPOINT']
-const MONGO_USER = process.env['MONGO_USER']
-const MONGO_PASS = process.env['MONGO_PASS']
-const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_ENDPOINT}:27017`;
-const DB_NAME = 'osha_data';
 const COLLECTION_NAME = 'publications';
 
 // Create a structure to store our publications
 const publications = [];
 let publicationCounter = 0;
-let mongoClient;
-let db;
+
 let collection;
-
-// Initialize MongoDB connection
-async function connectToMongoDB() {
-    try {
-        mongoClient = new MongoClient(MONGO_URI);
-        await mongoClient.connect();
-        console.log('Connected to MongoDB');
-
-        db = mongoClient.db(DB_NAME);
-        collection = db.collection(COLLECTION_NAME);
-
-        // Create indexes for faster queries
-        await collection.createIndex({ publicationDate: 1 });
-        await collection.createIndex({ standardNumber: 1 });
-        await collection.createIndex({ oshActSection: 1 });
-
-        return true;
-    } catch (error) {
-        console.error('Failed to connect to MongoDB:', error);
-        return false;
-    }
-}
-
-// Save publications to MongoDB
-async function saveToMongoDB(pubs) {
-    if (!pubs) return;
-
-    try {
-        const result = await collection.insertMany(pubs, {ordered : false });
-        console.log(`Saved ${result.insertedCount} publications to MongoDB`);
-    } catch (error) {
-        console.error('Error saving to MongoDB:', error);
-    }
-}
+// Initialize MongoDB client
+const mongo = new MongoDBWrapper()
 
 // Initialize the crawler
 const crawler = new CheerioCrawler({
@@ -130,7 +88,7 @@ const crawler = new CheerioCrawler({
             // Save to MongoDB after every 100 records
             if (publicationCounter % 10 === 0) {
                 const batch = publications.slice(publications.length - 100);
-                await saveToMongoDB(batch);
+                await mongo.bulkUpsert("publications", batch);
                 console.log(`Saved batch of ${batch.length} publications to MongoDB`);
             }
 
@@ -147,12 +105,7 @@ const crawler = new CheerioCrawler({
 
 // Main function to run the crawler
 export async function runCrawler() {
-    // Connect to MongoDB first
-    const connected = await connectToMongoDB();
-    if (!connected) {
-        console.error('Could not connect to MongoDB. Exiting...');
-        return;
-    }
+
 
     // Add the starting URL to the crawler
     await crawler.addRequests([{ url: BASE_URL }]);
@@ -167,7 +120,7 @@ export async function runCrawler() {
     const remainingCount = publicationCounter % 100;
     if (remainingCount > 0) {
         const remaining = publications.slice(publications.length - remainingCount);
-        await saveToMongoDB(remaining);
+        await mongo.bulkUpsert("publications", remaining);
         console.log(`Saved final batch of ${remaining.length} publications to MongoDB`);
     }
 
@@ -223,11 +176,7 @@ export async function runCrawler() {
 
     console.log('Data saved to both MongoDB and local Dataset.');
 
-    // Close MongoDB connection
-    if (mongoClient) {
-        await mongoClient.close();
-        console.log('MongoDB connection closed');
-    }
+
 }
 
 // Run the crawler

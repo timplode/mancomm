@@ -8,7 +8,10 @@
     "serverless:deploy": "sls deploy -s prod",
     "search:deploy": "sls deploy -s prod function -f search",
     "document:deploy": "sls deploy -s prod function -f document",
-    "standard:deploy": "sls deploy -s prod function -f standard"
+    "standard:deploy": "sls deploy -s prod function -f standard",
+    "scrape:publication": "MONGO_HOST=localhost MONGO_USER=root MONGO_PASS=${MONGO_PASS} MONGO_DB=osha_data node crawler/scrape.js",
+    "scrape:standard": "MONGO_HOST=localhost MONGO_USER=root MONGO_PASS=${MONGO_PASS} MONGO_DB=osha_data node crawler/scrape-standards.js"
+
   },
   "devDependencies": {
     "serverless-offline": "^13.0.0"
